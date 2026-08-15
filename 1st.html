@@ -1,0 +1,1172 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Still Into You</title>
+  <link
+      rel="icon"
+      href="https://cdn-icons-png.flaticon.com/128/3769/3769084.png"
+      type="image/svg+xml"
+    />
+
+<style>
+/* ==========================================================================
+   LIQUID GLASS UI KIT — TRIMMED BUILD
+   Sections kept: Hero, Toast / Snackbar, Modal
+   Following CSS Guidelines (cssguidelin.es) — BEM methodology,
+   single responsibility, progressive enhancement.
+   ==========================================================================
+
+   TABLE OF CONTENTS
+   -----------------
+    1.  Custom Properties — Design Token System
+    2.  Reset & Base
+    3.  @supports — Graceful Degradation
+    4.  prefers-reduced-motion
+    5.  Animated Background Scene
+    6.  Glass Utility Classes
+    7.  Focus Visible
+    8.  Component: Card (typography reused by Modal)
+    9.  Component: Button
+   10.  Component: Modal / Dialog
+   11.  Component: Toast / Snackbar
+   12.  Page Layout & Hero
+   13.  Responsive
+
+   Theme: dark only — no light-theme tokens or toggle.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+       1. CUSTOM PROPERTIES — Design Token System
+       -------------------------------------------------------------------------- */
+:root {
+  /* ── Glass surface tints ── */
+  --glass-white: rgba(255, 255, 255, 0.12);
+  --glass-white-md: rgba(255, 255, 255, 0.2);
+  --glass-white-lg: rgba(255, 255, 255, 0.3);
+  --glass-dark: rgba(0, 0, 0, 0.18);
+  --glass-dark-md: rgba(0, 0, 0, 0.28);
+
+  /* ── Borders ── */
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --glass-border-subtle: rgba(255, 255, 255, 0.12);
+  --glass-border-bright: rgba(255, 255, 255, 0.5);
+
+  /* ── Blur values ── */
+  --blur-sm: blur(8px);
+  --blur-md: blur(18px);
+  --blur-lg: blur(32px);
+  --blur-xl: blur(60px);
+
+  /* ── Shadows ── */
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  --shadow-float: 0 20px 60px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 40px rgba(120, 200, 255, 0.35);
+
+  /* ── Reflections ── */
+  --reflection-top: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0) 50%
+  );
+  --reflection-inner: inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.1);
+
+  /* ── Colour palette ── */
+  --accent-aqua: #5ee7df;
+  --accent-violet: #b490f5;
+  --accent-rose: #f7a8c4;
+  --accent-amber: #ffd27f;
+  --accent-lime: #a8f08a;
+
+  /* ── Semantic surface / text ── */
+  --color-bg: #0b0e1a;
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-text: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.55);
+  --color-text-subtle: rgba(255, 255, 255, 0.35);
+
+  /* ── Spacing scale ── */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+
+  /* ── Type scale ── */
+  --text-2xs: 0.68rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.82rem;
+  --text-md: 0.9rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.3rem;
+  --text-2xl: 1.6rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.8rem;
+
+  /* ── Radius scale ── */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
+
+  /* ── Z-index scale ── */
+  --z-base: 1;
+  --z-raised: 10;
+  --z-overlay: 100;
+  --z-modal: 500;
+  --z-toast: 800;
+  --z-tooltip: 900;
+
+  /* ── Easing tokens ── */
+  --ease-glass: cubic-bezier(0.22, 0.68, 0, 1.2);
+  --ease-liquid: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+
+  /* ── Duration tokens ── */
+  --dur-fast: 180ms;
+  --dur-mid: 360ms;
+  --dur-slow: 600ms;
+
+  /* ── Typography ── */
+  --font-display: "Italiana", serif;
+  --font-body: "DM Sans", sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+       2. RESET & BASE
+       -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow-x: hidden;
+  min-height: 100vh;
+  transition: background var(--dur-mid) var(--ease-smooth),
+    color var(--dur-mid) var(--ease-smooth);
+}
+
+/* --------------------------------------------------------------------------
+       3. @supports — Graceful Degradation
+       When backdrop-filter is unsupported (older Firefox / Edge),
+       fall back to a solid-ish semi-transparent surface.
+       -------------------------------------------------------------------------- */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass {
+    background: rgba(20, 25, 45, 0.88) !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  .glass-modal-backdrop {
+    background: rgba(0, 0, 0, 0.7) !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+       4. prefers-reduced-motion — legal requirement in many markets
+       -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .scene__blob {
+    animation: none !important;
+  }
+  .hero__title,
+  .hero__kicker,
+  .hero__sub,
+  .hero__cta,
+  .section {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+       5. ANIMATED BACKGROUND SCENE
+       -------------------------------------------------------------------------- */
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scene__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.55;
+  animation: blob-drift var(--dur, 18s) ease-in-out infinite alternate;
+}
+
+.scene__blob--1 {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, #5ee7df, #3b82f6);
+  top: -200px;
+  left: -150px;
+  --dur: 22s;
+}
+.scene__blob--2 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, #b490f5, #ec4899);
+  bottom: -200px;
+  right: -100px;
+  --dur: 17s;
+  animation-delay: -8s;
+}
+.scene__blob--3 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, #ffd27f, #f7a8c4);
+  top: 40%;
+  left: 50%;
+  --dur: 25s;
+  animation-delay: -13s;
+}
+
+@keyframes blob-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(60px, -40px) scale(1.08);
+  }
+  66% {
+    transform: translate(-40px, 60px) scale(0.94);
+  }
+  100% {
+    transform: translate(30px, 30px) scale(1.04);
+  }
+}
+
+/* --------------------------------------------------------------------------
+       6. GLASS UTILITY CLASSES
+       -------------------------------------------------------------------------- */
+.glass {
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  background: var(--glass-white);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--reflection-top);
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.glass--dark {
+  background: var(--glass-dark-md);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.glass--bright {
+  background: var(--glass-white-lg);
+  border-color: var(--glass-border-bright);
+}
+.glass--frosted {
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  background: rgba(255, 255, 255, 0.08);
+}
+.glass--liquid {
+  backdrop-filter: var(--blur-xl);
+  -webkit-backdrop-filter: var(--blur-xl);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* --------------------------------------------------------------------------
+       7. FOCUS VISIBLE — Keyboard accessibility
+       -------------------------------------------------------------------------- */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-aqua);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+.glass-btn:focus-visible {
+  outline: 2px solid var(--accent-aqua);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+       8. COMPONENT: CARD
+       (kept only for .glass-card__label / __title / __body typography,
+       which the Modal body reuses)
+       -------------------------------------------------------------------------- */
+.glass-card__label {
+  font-size: var(--text-2xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: var(--space-xs);
+}
+.glass-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  line-height: 1.15;
+  margin-bottom: var(--space-sm);
+}
+.glass-card__body {
+  font-size: var(--text-md);
+  line-height: 1.65;
+  opacity: 0.75;
+}
+
+/* --------------------------------------------------------------------------
+       9. COMPONENT: BUTTON
+       -------------------------------------------------------------------------- */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease-liquid),
+    box-shadow var(--dur-fast), background var(--dur-fast);
+}
+
+.glass-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--reflection-top);
+  pointer-events: none;
+}
+
+.glass-btn:active {
+  transform: scale(0.96);
+}
+.glass-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.glass-btn--primary {
+  background: linear-gradient(
+    135deg,
+    rgba(94, 231, 223, 0.5) 0%,
+    rgba(59, 130, 246, 0.5) 100%
+  );
+  border: 1px solid rgba(94, 231, 223, 0.45);
+  box-shadow: 0 4px 24px rgba(94, 231, 223, 0.3), var(--reflection-inner);
+}
+.glass-btn--primary:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(94, 231, 223, 0.7) 0%,
+    rgba(59, 130, 246, 0.7) 100%
+  );
+  box-shadow: 0 8px 36px rgba(94, 231, 223, 0.5), var(--reflection-inner);
+  transform: translateY(-2px);
+}
+
+.glass-btn--ghost {
+  background: var(--glass-white);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-glass);
+}
+.glass-btn--ghost:hover {
+  background: var(--glass-white-md);
+  transform: translateY(-2px);
+}
+
+.glass-btn--accent {
+  background: linear-gradient(
+    135deg,
+    rgba(180, 144, 245, 0.5) 0%,
+    rgba(247, 168, 196, 0.5) 100%
+  );
+  border: 1px solid rgba(180, 144, 245, 0.45);
+  box-shadow: 0 4px 24px rgba(180, 144, 245, 0.3), var(--reflection-inner);
+}
+.glass-btn--accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(180, 144, 245, 0.5), var(--reflection-inner);
+}
+
+.glass-btn--danger {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.45) 0%,
+    rgba(220, 38, 38, 0.45) 100%
+  );
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  box-shadow: 0 4px 24px rgba(239, 68, 68, 0.25), var(--reflection-inner);
+}
+.glass-btn--danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 36px rgba(239, 68, 68, 0.45), var(--reflection-inner);
+}
+
+.glass-btn--icon {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  justify-content: center;
+  line-height: 1;
+}
+.glass-btn--sm {
+  padding: var(--space-2xs) var(--space-md);
+  font-size: var(--text-xs);
+}
+.glass-btn--lg {
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-base);
+}
+
+/* --------------------------------------------------------------------------
+       10. COMPONENT: MODAL / DIALOG
+       -------------------------------------------------------------------------- */
+.glass-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  z-index: var(--z-modal);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-mid);
+  padding: var(--space-md);
+}
+
+.glass-modal-backdrop.is-open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* The modal itself gets its own opaque tinted surface — NOT using .glass
+       directly so it isn't transparent like other glass panels. */
+.glass-modal {
+  border-radius: var(--radius-2xl);
+  padding: 0;
+  width: min(500px, 90vw);
+  transform: translateY(24px) scale(0.96);
+  transition: transform var(--dur-slow) var(--ease-liquid),
+    opacity var(--dur-slow);
+  opacity: 0;
+  overflow: hidden;
+  /* Dark: deep navy with enough opacity to read clearly */
+  background: rgba(16, 20, 40, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55), 0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: var(--blur-lg);
+  -webkit-backdrop-filter: var(--blur-lg);
+  position: relative;
+}
+
+/* Top accent bar — thin gradient stripe across the header */
+.glass-modal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--accent-aqua) 0%,
+    var(--accent-violet) 50%,
+    var(--accent-rose) 100%
+  );
+  z-index: 10;
+  pointer-events: none;
+}
+
+.glass-modal-backdrop.is-open .glass-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Header area — slightly lighter strip */
+.glass-modal__header {
+  padding: var(--space-xl) var(--space-xl) var(--space-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Body area */
+.glass-modal__body {
+  padding: var(--space-xl);
+}
+
+/* Footer actions */
+.glass-modal__footer {
+  padding: var(--space-md) var(--space-xl) var(--space-xl);
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.glass-modal__close {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  line-height: 1;
+  z-index: 20;
+  transition: background var(--dur-fast), color var(--dur-fast),
+    transform var(--dur-fast) var(--ease-liquid);
+}
+.glass-modal__close:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* --------------------------------------------------------------------------
+       11. COMPONENT: TOAST / SNACKBAR
+       -------------------------------------------------------------------------- */
+.glass-toast-region {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  pointer-events: none;
+  width: min(360px, 90vw);
+}
+
+.glass-toast {
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  pointer-events: all;
+  cursor: pointer;
+  animation: toast-in var(--dur-mid) var(--ease-liquid) both;
+  transition: transform var(--dur-fast) var(--ease-liquid),
+    opacity var(--dur-fast);
+}
+
+.glass-toast:hover {
+  transform: translateX(-4px);
+}
+
+.glass-toast.is-exiting {
+  animation: toast-out var(--dur-mid) var(--ease-glass) forwards;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(60px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    max-height: 80px;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(60px) scale(0.9);
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.glass-toast__icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.glass-toast__body {
+  flex: 1;
+}
+.glass-toast__title {
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+.glass-toast__desc {
+  font-size: var(--text-xs);
+  opacity: 0.65;
+  margin-top: 2px;
+}
+.glass-toast__close {
+  opacity: 0.5;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  transition: opacity var(--dur-fast);
+}
+.glass-toast:hover .glass-toast__close {
+  opacity: 1;
+}
+
+.glass-toast--success {
+  border-color: rgba(74, 222, 128, 0.4) !important;
+  box-shadow: 0 4px 24px rgba(74, 222, 128, 0.2) !important;
+}
+.glass-toast--error {
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  box-shadow: 0 4px 24px rgba(239, 68, 68, 0.2) !important;
+}
+.glass-toast--warning {
+  border-color: rgba(251, 191, 36, 0.4) !important;
+  box-shadow: 0 4px 24px rgba(251, 191, 36, 0.2) !important;
+}
+.glass-toast--info {
+  border-color: rgba(94, 231, 223, 0.4) !important;
+  box-shadow: 0 4px 24px rgba(94, 231, 223, 0.2) !important;
+}
+
+/* Toast demo buttons */
+.toast-demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+/* --------------------------------------------------------------------------
+       12. PAGE LAYOUT & HERO
+       -------------------------------------------------------------------------- */
+.page {
+  position: relative;
+  z-index: 10;
+}
+
+.section {
+  padding: var(--space-3xl) 0;
+  animation: cascade-in var(--dur-slow) var(--ease-glass) both;
+}
+.section:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.section:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+@keyframes cascade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+.container {
+  width: min(1100px, 92vw);
+  margin-inline: auto;
+}
+
+.section__header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+.section__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: 0.01em;
+}
+.section__subtitle {
+  font-size: var(--text-xs);
+  opacity: 0.45;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 24px;
+  gap: var(--space-lg);
+}
+.hero__kicker {
+  font-size: var(--text-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  animation: cascade-in 0.7s var(--ease-glass) 0.1s both;
+}
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 7rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(
+    135deg,
+    #fff 30%,
+    var(--accent-aqua) 65%,
+    var(--accent-violet) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: cascade-in 0.8s var(--ease-glass) 0.2s both;
+}
+.hero__sub {
+  max-width: 480px;
+  line-height: 1.7;
+  opacity: 0.65;
+  font-size: var(--text-base);
+  animation: cascade-in 0.8s var(--ease-glass) 0.3s both;
+}
+.hero__cta {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: cascade-in 0.8s var(--ease-glass) 0.4s both;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--glass-border),
+    transparent
+  );
+  margin: var(--space-3xl) 0;
+}
+
+/* --------------------------------------------------------------------------
+       13. RESPONSIVE
+       -------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .hero__title {
+    font-size: 3.2rem;
+  }
+}
+</style>
+</head>
+
+<body translate="no">
+  <div class="scene" aria-hidden="true">
+    <div class="scene__blob scene__blob--1"></div>
+    <div class="scene__blob scene__blob--2"></div>
+    <div class="scene__blob scene__blob--3"></div>
+  </div>
+
+  <!-- Toast region (ARIA live) -->
+  <div class="glass-toast-region" id="toast-region" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+  <main class="page">
+
+    <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
+    <header class="hero">
+      <span class="hero__kicker">Love · Trust · Care</span>
+      <h1 class="hero__title">To my<br>favorite person</h1>
+      <p class="hero__sub">
+        As long as we stay connected to each other, it's never too late to start again.
+      </p>
+
+      <div class="hero__cta">
+        <a href="#toast" class="glass glass-btn glass-btn--primary">My thoughts about you →</a>
+        <a href="https://stygianex.github.io/revisedIndex/mp3.html" target="_blank" class="glass glass-btn glass-btn--ghost">Play Music ♬🎧♪</a>
+      </div>
+    </header>
+
+    <div class="container page" id="components">
+
+      <!-- ─── TOAST ─────────────────────────────────────────────────────── -->
+      <section class="section" id="toast">
+        <div class="section__header">
+          <h2 class="section__title">Meaningful & Expressive</h2>
+          <span class="section__subtitle">Have you ever wondered what my thoughts about you are?</span>
+        </div>
+        <div class="toast-demo-row">
+          <button class="glass glass-btn glass-btn--ghost" data-toast="affectionate" data-toast-title="I hope you're doing well!" data-toast-desc="We may be far apart, but please know that I'm always here for you.">❤️ Affectionate</button>
+
+          <button class="glass glass-btn glass-btn--ghost" data-toast="deep" data-toast-title="I wonder where life will take us." data-toast-desc="If our paths eventually lead us to each other, I'll make sure to cherish every moment we share.">🌙 Deep</button>
+
+          <button class="glass glass-btn glass-btn--ghost" data-toast="everyday" data-toast-title="You'd probably love this place." data-toast-desc="Whenever you're ready to explore it with me, I'll be right there beside you.">🌿 Everyday</button>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ─── MODAL ─────────────────────────────────────────────────────── -->
+      <section class="section" id="modal">
+        <div class="section__header">
+          <h2 class="section__title">Profound</h2>
+          <span class="section__subtitle">What do we have here?</span>
+        </div>
+        <button class="glass glass-btn glass-btn--primary" id="modal-open">Open Message →</button>
+      </section>
+
+      <div class="glass-modal-backdrop" id="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title" inert>
+        <div class="glass-modal">
+          <button class="glass-modal__close" id="modal-close" aria-label="Close dialog">✕</button>
+
+          <div class="glass-modal__header">
+            <div class="glass-card__label">1st · Month</div>
+            <h3 class="glass-card__title" id="modal-title">The Message</h3>
+          </div>
+
+          <div class="glass-modal__body">
+            <p class="glass-card__body">I've been thinking about what happened between us, and I realized that I made a mistake by making the sudden decision to end our relationship without first talking to you properly.</p>
+            <br>
+            <p class="glass-card__body">The concerns I had were real, and they did affect me, but I allowed my doubts and overthinking to make the decision for me instead of giving us the chance to communicate and understand each other. For that, I am truly sorry.</p>
+            <br>
+            <p class="glass-card__body">We've talked about the possibility of getting back together, but I'm not here to put any pressure on you or rush anything. You can take all the time you need, and I'll respect whatever pace you're comfortable with.</p>
+            <br>
+            <p class="glass-card__body">For now, I just want the opportunity to make things right and do this properly this time. We'll take things slowly, communicate openly, and be honest with each other. I truly believe that if we're both willing to understand, support, and meet each other halfway, we can make things work.</p>
+            <div style="margin-top:var(--space-md); padding:var(--space-md); border-radius:var(--radius-md); background:rgba(94,231,223,.08); border:1px solid rgba(94,231,223,.18);">
+              <p style="font-size:var(--text-sm); opacity:.80; line-height:1.6;">"Love is the whole thing. We are just pieces that are meant to be together." — stygianEx</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+  /**
+   * liquidGlassKit.js — trimmed build
+   * ─────────────────────────────────────────────────────────────────────────
+   * Kept modules: GlassModal, GlassToast, GlassRipple
+   * Theme is dark-only — no toggle, no data-theme attribute.
+   * Each component:
+   *   - Has an init() static factory method
+   *   - Emits custom 'glass:*' events on its host element
+   *   - Is keyboard accessible
+   *   - Does not rely on global state
+   * ─────────────────────────────────────────────────────────────────────────
+   */
+  (function liquidGlassKit() {
+    "use strict";
+
+    /* ======================================================================
+       UTILITIES
+       ====================================================================== */
+
+    function emit(el, name, detail) {
+      el.dispatchEvent(
+        new CustomEvent("glass:" + name, { bubbles: true, detail: detail || {} })
+      );
+    }
+
+    function getFocusable(container) {
+      return Array.from(
+        container.querySelectorAll(
+          "a[href], button:not([disabled]), input:not([disabled]), " +
+          "select:not([disabled]), textarea:not([disabled]), " +
+          '[tabindex]:not([tabindex="-1"])'
+        )
+      );
+    }
+
+    function trapFocus(container, evt) {
+      var focusable = getFocusable(container);
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (evt.key === "Tab") {
+        if (evt.shiftKey && document.activeElement === first) {
+          evt.preventDefault();
+          last.focus();
+        } else if (!evt.shiftKey && document.activeElement === last) {
+          evt.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    /* ======================================================================
+       GlassModal
+       ====================================================================== */
+    function GlassModal(backdropEl) {
+      this.backdrop = backdropEl;
+      this.modal = backdropEl.querySelector(".glass-modal");
+      this._onKey = this._handleKey.bind(this);
+      this._bindTriggers();
+    }
+
+    GlassModal.prototype._bindTriggers = function () {
+      var self = this;
+
+      /* Open triggers — any [data-modal-open] or #modal-open */
+      document
+        .querySelectorAll("[data-modal-open], #modal-open")
+        .forEach(function (el) {
+          el.addEventListener("click", function () {
+            self.open();
+          });
+        });
+
+      /* Close triggers */
+      this.backdrop
+        .querySelectorAll(
+          '[id^="modal-close"], [id^="modal-confirm"], [id^="modal-cancel"]'
+        )
+        .forEach(function (el) {
+          el.addEventListener("click", function () {
+            self.close();
+          });
+        });
+
+      /* Backdrop click */
+      this.backdrop.addEventListener("click", function (evt) {
+        if (evt.target === self.backdrop) self.close();
+      });
+    };
+
+    GlassModal.prototype.open = function () {
+      this._lastFocus = document.activeElement;
+      this.backdrop.removeAttribute("inert");
+      this.backdrop.classList.add("is-open");
+      document.addEventListener("keydown", this._onKey);
+
+      /* Focus first focusable after animation */
+      var self = this;
+      setTimeout(function () {
+        var focusable = getFocusable(self.modal);
+        if (focusable.length) focusable[0].focus();
+      }, 50);
+
+      emit(this.backdrop, "modal:open");
+    };
+
+    GlassModal.prototype.close = function () {
+      this.backdrop.classList.remove("is-open");
+      this.backdrop.setAttribute("inert", "");
+      document.removeEventListener("keydown", this._onKey);
+      if (this._lastFocus) this._lastFocus.focus();
+      emit(this.backdrop, "modal:close");
+    };
+
+    GlassModal.prototype._handleKey = function (evt) {
+      if (evt.key === "Escape") {
+        this.close();
+        return;
+      }
+      trapFocus(this.modal, evt);
+    };
+
+    GlassModal.init = function () {
+      var backdrop = document.getElementById("modal-backdrop");
+      if (backdrop) new GlassModal(backdrop);
+    };
+
+    /* ======================================================================
+       GlassToast
+       ====================================================================== */
+    var GlassToast = {
+      ICONS: { affectionate: "❤️", deep: "🌙", everyday: "🌿" },
+      LABELS: {
+        success: "Affectionate",
+        error: "Deep",
+        warning: "Everyday"
+      },
+
+      show: function (type, title, desc, duration) {
+        var region = document.getElementById("toast-region");
+        if (!region) return;
+
+        var toast = document.createElement("div");
+        toast.className = "glass glass-toast glass-toast--" + type;
+        toast.setAttribute("role", "status");
+        toast.setAttribute("aria-live", "polite");
+        toast.innerHTML =
+          '<span class="glass-toast__icon" aria-hidden="true">' +
+          (this.ICONS[type] || "ℹ") +
+          "</span>" +
+          '<div class="glass-toast__body">' +
+          '<div class="glass-toast__title">' +
+          (title || this.LABELS[type]) +
+          "</div>" +
+          (desc ? '<div class="glass-toast__desc">' + desc + "</div>" : "") +
+          "</div>" +
+          '<span class="glass-toast__close" aria-label="Dismiss">✕</span>';
+
+        region.appendChild(toast);
+        emit(region, "toast:show", { type: type, title: title });
+
+        var dismiss = function () {
+          toast.classList.add("is-exiting");
+          toast.addEventListener(
+            "animationend",
+            function () {
+              toast.remove();
+            },
+            { once: true }
+          );
+        };
+
+        toast
+          .querySelector(".glass-toast__close")
+          .addEventListener("click", dismiss);
+        toast.addEventListener("click", dismiss);
+        if (duration !== 0) setTimeout(dismiss, duration || 4000);
+      },
+
+      init: function () {
+        document.addEventListener("click", function (evt) {
+          var btn = evt.target.closest("[data-toast]");
+          if (!btn) return;
+          GlassToast.show(
+            btn.dataset.toast,
+            btn.dataset.toastTitle,
+            btn.dataset.toastDesc
+          );
+        });
+      }
+    };
+
+    /* ======================================================================
+       GlassRipple — click ripple used by .glass-btn
+       ====================================================================== */
+    var GlassRipple = {
+      create: function (el, evt) {
+        /* Limit DOM nodes: skip if too many ripples present */
+        if (el.querySelectorAll("[data-ripple]").length > 3) return;
+
+        var ripple = document.createElement("span");
+        ripple.setAttribute("data-ripple", "");
+        var rect = el.getBoundingClientRect();
+        var size = Math.max(rect.width, rect.height) * 1.2;
+        var x = evt.clientX - rect.left - size / 2;
+        var y = evt.clientY - rect.top - size / 2;
+
+        Object.assign(ripple.style, {
+          position: "absolute",
+          left: x + "px",
+          top: y + "px",
+          width: size + "px",
+          height: size + "px",
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.18)",
+          transform: "scale(0)",
+          pointerEvents: "none",
+          animation: "ripple 600ms ease-out forwards",
+          zIndex: "999"
+        });
+
+        el.appendChild(ripple);
+        ripple.addEventListener(
+          "animationend",
+          function () {
+            ripple.remove();
+          },
+          { once: true }
+        );
+      },
+
+      init: function () {
+        document.addEventListener("click", function (evt) {
+          var target = evt.target.closest(".glass-btn");
+          if (target) GlassRipple.create(target, evt);
+        });
+      }
+    };
+
+    function boot() {
+      GlassModal.init();
+      GlassToast.init();
+      GlassRipple.init();
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", boot);
+    } else {
+      boot();
+    }
+  })();
+  </script>
+
+</body>
+
+</html>
